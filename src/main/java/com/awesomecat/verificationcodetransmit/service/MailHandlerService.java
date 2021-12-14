@@ -1,6 +1,6 @@
 package com.awesomecat.verificationcodetransmit.service;
 
-import com.awesomecat.verificationcodetransmit.bo.MailInfo;
+import javax.mail.MessagingException;
 
 /**
  * 收到邮件后统一回调此接口，业务方如需使用，实现此接口即可
@@ -10,13 +10,18 @@ import com.awesomecat.verificationcodetransmit.bo.MailInfo;
 public interface MailHandlerService {
 
     /**
-     * 业务处理方法
-     * <p>
-     * 1、根据业务需要处理邮箱内容
-     * 2、建议发件人入库，便于后续分析
+     * 心跳
      *
-     * @param mailInfo
-     * @return 返回处理状态, true 处理完成,邮件标记为已读
+     * @author mianXian
+     * @date 2021/12/14 14:11
      */
-    boolean doHandler(MailInfo mailInfo);
+    void tiktok() throws MessagingException;
+
+    /**
+     * 监听新邮件
+     *
+     * @author mianXian
+     * @date 2021/12/14 14:20
+     */
+    void listen() throws MessagingException;
 }

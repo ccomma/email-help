@@ -6,7 +6,8 @@ package com.awesomecat.verificationcodetransmit.constants;
  */
 public class MailConstant {
 
-    private MailConstant(){}
+    private MailConstant() {
+    }
 
     public static final String INBOX_FOLDER_NAME = "Inbox";
 }
