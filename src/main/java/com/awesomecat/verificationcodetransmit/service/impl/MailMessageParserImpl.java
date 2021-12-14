@@ -1,9 +1,9 @@
 package com.awesomecat.verificationcodetransmit.service.impl;
 
 import com.awesomecat.verificationcodetransmit.bo.MailInfo;
+import com.awesomecat.verificationcodetransmit.bo.PersonInfo;
 import com.awesomecat.verificationcodetransmit.service.MailMessageParser;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -16,19 +16,20 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * 信息解析器
  *
- * @author mianXian
+ * @author awesomecat
  * @date 2021/12/14 14:52
  */
 @Slf4j
@@ -37,81 +38,80 @@ public class MailMessageParserImpl implements MailMessageParser {
 
     @Override
     public MailInfo parseMessage(MimeMessage mimeMessage) {
-        Folder folder = mimeMessage.getFolder();
         try {
+            Folder folder = mimeMessage.getFolder();
             if (!folder.isOpen()) {
                 return null;
             }
 
             MailInfo mailInfo = new MailInfo();
             mailInfo.setFrom(this.getFrom(mimeMessage));
-            mailInfo.setTo(this.getAddress(this.getReceiveMailAddress(Message.RecipientType.TO, mimeMessage)));
-            mailInfo.setCc(this.getAddress(this.getReceiveMailAddress(Message.RecipientType.CC, mimeMessage)));
-            mailInfo.setBcc(this.getAddress(this.getReceiveMailAddress(Message.RecipientType.BCC, mimeMessage)));
+            mailInfo.setTo(this.getReceiveInfoList(Message.RecipientType.TO, mimeMessage));
+            mailInfo.setCc(this.getReceiveInfoList(Message.RecipientType.CC, mimeMessage));
+            mailInfo.setBcc(this.getReceiveInfoList(Message.RecipientType.BCC, mimeMessage));
             mailInfo.setSubject(MimeUtility.decodeText(mimeMessage.getSubject()));
             mailInfo.setSentDate(mimeMessage.getSentDate());
             mailInfo.setReceivedDate(mimeMessage.getReceivedDate());
-            mailInfo.setBodyText(this.getBodyText(mimeMessage));
+            mailInfo.setContent(this.getBodyText(mimeMessage));
             mailInfo.setMessageId(mimeMessage.getMessageID());
-            mailInfo.setBox(mimeMessage.getFolder().getName());
-
+            mailInfo.setBoxName(mimeMessage.getFolder().getName());
             return mailInfo;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (MessagingException e) {
+            log.error("parse message error", e);
+        } catch (IOException e) {
+            log.error("file operate error", e);
         }
 
         return null;
     }
 
-    private String getFrom(MimeMessage mimeMessage) throws MessagingException {
+    /**
+     * 获取发送人信息
+     *
+     * @param mimeMessage 邮件信息
+     * @return 发送人信息
+     * @author awesomecat
+     * @date 2021/12/14 19:06
+     */
+    private PersonInfo getFrom(MimeMessage mimeMessage) throws MessagingException {
         InternetAddress[] address = (InternetAddress[]) mimeMessage.getFrom();
-        String from = address[0].getAddress();
-        if (from == null) {
+        if (address[0].getAddress() == null) {
             log.warn("mail address is null!");
-            return StringUtils.EMPTY;
+            return null;
         }
 
-        return from;
-    }
-
-    private String getAddress(String personAddress) {
-        if (StringUtils.isEmpty(personAddress)) {
-            return StringUtils.EMPTY;
-        }
-
-        String regex = ".*<(.*)>.*";
-        Pattern pattern = Pattern.compile(regex);
-        String[] split = personAddress.split(";");
-
-        String[] resultString = Arrays.stream(split)
-                .filter(s -> pattern.matcher(s).matches())
-                .map(s -> pattern.matcher(s).group(1))
-                .toArray(String[]::new);
-
-        return StringUtils.join(resultString, ";");
+        return PersonInfo.of(address[0]);
     }
 
     /**
-     * 获得邮件的收件人，抄送，和密送的地址和姓名
-     * <p> 格式：{@code name<address>,name<address>}
+     * 获取接收人信息列表
+     * <p> 用于获取收件人人、抄送人、密送人
+     *
+     * @param type        类型（收件人 or 抄送人 or 秘密抄送）
+     * @param mimeMessage 邮件信息
+     * @return 接收人信息列表
+     * @author awesomecat
+     * @date 2021/12/14 19:06
      */
-    private String getReceiveMailAddress(Message.RecipientType type, MimeMessage mimeMessage) throws MessagingException, UnsupportedEncodingException {
+    private List<PersonInfo> getReceiveInfoList(Message.RecipientType type, MimeMessage mimeMessage) throws MessagingException, UnsupportedEncodingException {
         Assert.notNull(type, "RecipientType must not be null");
-        InternetAddress[] addressList = (InternetAddress[]) mimeMessage.getRecipients(Message.RecipientType.TO);
+        InternetAddress[] addressList = (InternetAddress[]) mimeMessage.getRecipients(type);
         if (addressList == null) {
-            return StringUtils.EMPTY;
+            return Collections.emptyList();
         }
 
-        List<String> resultList = new ArrayList<>();
-        for (InternetAddress address : addressList) {
-            String emailAddress = MimeUtility.decodeText(address.getAddress());
-            String personal = MimeUtility.decodeText(address.getPersonal());
-            resultList.add(personal + "<" + emailAddress + ">");
-        }
-        return StringUtils.join(resultList, ",");
+        return Arrays.stream(addressList).map(PersonInfo::of).collect(Collectors.toList());
     }
 
-    private String getBodyText(MimeMessage mimeMessage) throws Exception {
+    /**
+     * 获取正文
+     *
+     * @param mimeMessage 邮件信息
+     * @return 邮件正文
+     * @author awesomecat
+     * @date 2021/12/14 19:08
+     */
+    private String getBodyText(MimeMessage mimeMessage) throws MessagingException, IOException {
         StringBuilder bodyTextBuilder = new StringBuilder();
         Map<String, String> imgs = new HashMap<>();
 
@@ -130,19 +130,15 @@ public class MailMessageParserImpl implements MailMessageParser {
     }
 
     /**
-     * <p>
-     * 解析邮件
-     * </p>
+     * 获取邮件内容
      *
-     * <pre>
-     *  主要是根据 MimeType 类型的不同执行不同的操作，一步一步的解析
-     *  把得到的邮件内容保存到一个 StringBuilder 对象中
-     * </pre>
-     *
-     * @throws MessagingException
-     * @throws Exception
+     * @param stringBuilder 内容构造器
+     * @param imgs          图片信息
+     * @param part          邮件内容
+     * @author mianXian
+     * @date 2021/12/14 19:10
      */
-    private void getMailContent(StringBuilder sb, Map<String, String> imgs, Part part) throws Exception {
+    private void getMailContent(StringBuilder stringBuilder, Map<String, String> imgs, Part part) throws MessagingException, IOException {
         // 检查内容是否为纯文本
         if (part.isMimeType("text/plain")) {
             log.warn("skip text plain");
@@ -151,7 +147,7 @@ public class MailMessageParserImpl implements MailMessageParser {
 
         // 检查内容是否为 html
         if (part.isMimeType("text/html")) {
-            sb.append(part.getContent());
+            stringBuilder.append(part.getContent());
             return;
         }
 
@@ -160,14 +156,14 @@ public class MailMessageParserImpl implements MailMessageParser {
             Multipart mp = (Multipart) part.getContent();
             int count = mp.getCount();
             for (int i = 0; i < count; i++) {
-                this.getMailContent(sb, imgs, mp.getBodyPart(i));
+                this.getMailContent(stringBuilder, imgs, mp.getBodyPart(i));
             }
             return;
         }
 
         // 检查内容是否含有嵌套消息
         if (part.isMimeType("message/rfc822")) {
-            this.getMailContent(sb, imgs, (Part) part.getContent());
+            this.getMailContent(stringBuilder, imgs, (Part) part.getContent());
             return;
         }
 

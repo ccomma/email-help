@@ -12,7 +12,7 @@ public interface MailHandlerService {
     /**
      * 心跳
      *
-     * @author mianXian
+     * @author awesomecat
      * @date 2021/12/14 14:11
      */
     void tiktok() throws MessagingException;
@@ -20,7 +20,7 @@ public interface MailHandlerService {
     /**
      * 监听新邮件
      *
-     * @author mianXian
+     * @author awesomecat
      * @date 2021/12/14 14:20
      */
     void listen() throws MessagingException;

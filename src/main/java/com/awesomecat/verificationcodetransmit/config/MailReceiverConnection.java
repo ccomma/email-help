@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 /**
  * 邮箱接收配置
  *
- * @author mianXian
+ * @author awesomecat
  * @date 2021/12/14 11:32
  */
 @Slf4j

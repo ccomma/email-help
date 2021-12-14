@@ -1,10 +1,12 @@
 package com.awesomecat.verificationcodetransmit.bo;
 
+import com.awesomecat.verificationcodetransmit.constants.MailConstant;
 import lombok.Data;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 邮件内容
@@ -17,19 +19,19 @@ import java.util.Date;
 public class MailInfo {
 
     /** 邮件正文内容 */
-    private String bodyText;
+    private String content;
 
     /** 发件人的地址和姓名 */
-    private String from;
+    private PersonInfo from;
 
     /** 收件人 */
-    private String to;
+    private List<PersonInfo> to;
 
     /** 抄送人 */
-    private String cc;
+    private List<PersonInfo> cc;
 
     /** 私密抄送 */
-    private String bcc;
+    private List<PersonInfo> bcc;
 
     /** 邮件主题 */
     private String subject;
@@ -43,6 +45,10 @@ public class MailInfo {
     /** 邮件的 Message-ID */
     private String messageId;
 
-    private String box;
+    /**
+     * 收件箱
+     * <p> 默认 {@link MailConstant#INBOX_FOLDER_NAME}
+     */
+    private String boxName;
 
 }

@@ -1,9 +1,12 @@
 mail:
   receiver:
+    # qq email
     host: imap.qq.com
     port: 993
-    username: xx
-    password: xx
+    # email username
+    username: xxx
+    # IMAP authorization code
+    password: xxx
     protocol: imap
     ssl: true
     idle: true

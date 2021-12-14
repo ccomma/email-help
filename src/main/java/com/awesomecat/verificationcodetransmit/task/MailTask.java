@@ -11,7 +11,7 @@ import javax.mail.MessagingException;
 /**
  * 邮件任务
  *
- * @author mianXian
+ * @author awesomecat
  * @date 2021/12/14 11:23
  */
 @Slf4j
