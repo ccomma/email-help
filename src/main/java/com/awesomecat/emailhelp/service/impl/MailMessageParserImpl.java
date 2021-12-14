@@ -1,7 +1,6 @@
 package com.awesomecat.emailhelp.service.impl;
 
 import com.awesomecat.emailhelp.bo.MailInfo;
-import com.awesomecat.emailhelp.bo.PersonInfo;
 import com.awesomecat.emailhelp.service.MailMessageParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
