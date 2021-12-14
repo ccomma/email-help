@@ -1,6 +1,6 @@
-package com.awesomecat.verificationcodetransmit.task;
+package com.awesomecat.emailhelp.task;
 
-import com.awesomecat.verificationcodetransmit.service.MailHandlerService;
+import com.awesomecat.emailhelp.service.MailHandlerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

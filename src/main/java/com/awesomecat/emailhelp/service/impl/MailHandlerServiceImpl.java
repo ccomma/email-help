@@ -1,9 +1,9 @@
-package com.awesomecat.verificationcodetransmit.service.impl;
+package com.awesomecat.emailhelp.service.impl;
 
-import com.awesomecat.verificationcodetransmit.bo.MailInfo;
-import com.awesomecat.verificationcodetransmit.config.MailReceiverConnection;
-import com.awesomecat.verificationcodetransmit.service.MailHandlerService;
-import com.awesomecat.verificationcodetransmit.service.MailMessageParser;
+import com.awesomecat.emailhelp.bo.MailInfo;
+import com.awesomecat.emailhelp.config.MailReceiverConnection;
+import com.awesomecat.emailhelp.service.MailHandlerService;
+import com.awesomecat.emailhelp.service.MailMessageParser;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

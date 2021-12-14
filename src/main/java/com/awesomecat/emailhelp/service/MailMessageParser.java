@@ -1,6 +1,6 @@
-package com.awesomecat.verificationcodetransmit.service;
+package com.awesomecat.emailhelp.service;
 
-import com.awesomecat.verificationcodetransmit.bo.MailInfo;
+import com.awesomecat.emailhelp.bo.MailInfo;
 
 import javax.mail.internet.MimeMessage;
 

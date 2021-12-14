@@ -1,4 +1,4 @@
-package com.awesomecat.verificationcodetransmit.service;
+package com.awesomecat.emailhelp.service;
 
 import javax.mail.MessagingException;
 

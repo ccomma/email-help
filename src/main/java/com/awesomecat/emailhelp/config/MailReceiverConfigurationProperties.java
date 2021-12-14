@@ -1,4 +1,4 @@
-package com.awesomecat.verificationcodetransmit.config;
+package com.awesomecat.emailhelp.config;
 
 import lombok.Getter;
 import lombok.Setter;

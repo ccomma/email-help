@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.awesomecat</groupId>
-    <artifactId>verification-code-transmit</artifactId>
+    <artifactId>email-help</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>verification-code-transmit</name>
-    <description>verification-code-transmit</description>
+    <name>email-help</name>
+    <description>email-help</description>
     <properties>
         <java.version>1.8</java.version>
         <commons-collections4.version>4.4</commons-collections4.version>

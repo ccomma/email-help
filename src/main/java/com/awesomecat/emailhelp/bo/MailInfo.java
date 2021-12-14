@@ -1,6 +1,6 @@
-package com.awesomecat.verificationcodetransmit.bo;
+package com.awesomecat.emailhelp.bo;
 
-import com.awesomecat.verificationcodetransmit.constants.MailConstant;
+import com.awesomecat.emailhelp.constants.MailConstant;
 import lombok.Data;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;

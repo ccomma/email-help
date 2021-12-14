@@ -1,4 +1,4 @@
-package com.awesomecat.verificationcodetransmit.constants;
+package com.awesomecat.emailhelp.constants;
 
 /**
  * 常量

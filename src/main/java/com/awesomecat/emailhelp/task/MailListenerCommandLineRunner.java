@@ -1,6 +1,6 @@
-package com.awesomecat.verificationcodetransmit.task;
+package com.awesomecat.emailhelp.task;
 
-import com.awesomecat.verificationcodetransmit.service.MailHandlerService;
+import com.awesomecat.emailhelp.service.MailHandlerService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;

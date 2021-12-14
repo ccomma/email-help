@@ -1,6 +1,6 @@
-package com.awesomecat.verificationcodetransmit.config;
+package com.awesomecat.emailhelp.config;
 
-import com.awesomecat.verificationcodetransmit.constants.MailConstant;
+import com.awesomecat.emailhelp.constants.MailConstant;
 import com.sun.mail.imap.IMAPFolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

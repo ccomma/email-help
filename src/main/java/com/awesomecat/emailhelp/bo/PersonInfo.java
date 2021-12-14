@@ -1,4 +1,4 @@
-package com.awesomecat.verificationcodetransmit.bo;
+package com.awesomecat.emailhelp.bo;
 
 import lombok.Data;
 import lombok.ToString;
