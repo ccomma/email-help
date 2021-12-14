@@ -24,24 +24,10 @@ import java.util.function.Consumer;
 public class MailReceiverConnection {
 
     private IMAPFolder imapFolder;
+    private Store store;
 
     @Resource
     private MailReceiverConfigurationProperties mailReceiverConfigurationProperties;
-
-    /**
-     * 是否开启
-     *
-     * @return 是否开启
-     */
-    public boolean isNotEnabled() {
-        if (mailReceiverConfigurationProperties.getRunNode()) {
-            return false;
-        }
-
-        // 支持多节点判断，优先 runMode = true，runNodeKey 为兼容已有系统中已有的配置
-        String runNodeKeyEnv = System.getenv(mailReceiverConfigurationProperties.getRunNodeKey());
-        return !mailReceiverConfigurationProperties.getRunNodeValue().equals(runNodeKeyEnv != null ? runNodeKeyEnv : "-1");
-    }
 
     /**
      * 初始化连接
@@ -64,7 +50,7 @@ public class MailReceiverConnection {
 
         // 连接邮件服务器
         Session session = Session.getInstance(properties, null);
-        Store store = session.getStore(mailReceiverConfigurationProperties.getProtocol());
+        store = session.getStore(mailReceiverConfigurationProperties.getProtocol());
         store.connect(mailReceiverConfigurationProperties.getHost(), mailReceiverConfigurationProperties.getPort(), mailReceiverConfigurationProperties.getUsername(), mailReceiverConfigurationProperties.getPassword());
 
         // 获取收件箱
@@ -82,6 +68,33 @@ public class MailReceiverConnection {
 
     public void handle(Consumer<IMAPFolder> consumer) {
         consumer.accept(imapFolder);
+    }
+
+    /**
+     * 是否开启
+     *
+     * @return 是否开启
+     */
+    public boolean isNotEnabled() {
+        if (mailReceiverConfigurationProperties.getRunNode()) {
+            return false;
+        }
+
+        // 支持多节点判断，优先 runMode = true，runNodeKey 为兼容已有系统中已有的配置
+        String runNodeKeyEnv = System.getenv(mailReceiverConfigurationProperties.getRunNodeKey());
+        return !mailReceiverConfigurationProperties.getRunNodeValue().equals(runNodeKeyEnv != null ? runNodeKeyEnv : "-1");
+    }
+
+    public void close() throws MessagingException {
+        // 关闭收件箱
+        if (imapFolder != null) {
+            imapFolder.close(false);
+        }
+
+        // 关闭连接
+        if (store != null) {
+            store.close();
+        }
     }
 
     public IMAPFolder getImapFolder() {
