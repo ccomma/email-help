@@ -1,0 +1,18 @@
+mail:
+  receiver:
+    host: imap.139.com
+    port: 993
+    username: xx
+    password: xx
+    protocol: imap
+    ssl: true
+    idle: true
+    poll-freq: 5000
+    run-node: true
+    run-node-key: ARTEMIS_JOB_NODE
+    run-node-value: 1
+    cron: 0 0/10 * * * ?
+
+logging:
+  level:
+    root: debug
