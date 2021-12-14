@@ -1,6 +1,6 @@
 mail:
   receiver:
-    host: imap.139.com
+    host: imap.qq.com
     port: 993
     username: xx
     password: xx
