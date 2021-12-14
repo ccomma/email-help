@@ -16,7 +16,7 @@ public class MailHandlerServiceServiceImpl implements MailHandlerService {
 
     @Override
     public boolean doHandler(MailInfo mailInfo) {
-        log.info("新邮件通知:{}", mailInfo.toString());
+        log.info("you have a message:[{}]", mailInfo.toString());
         return true;
     }
 }

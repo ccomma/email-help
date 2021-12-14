@@ -67,6 +67,7 @@ public class MailInfo {
     /**
      * 解析邮件的内容
      */
+    // TODO: 2021/12/14 移至解析类
     private void parseMessage() {
         Folder folder = this.mimeMessage.getFolder();
         try {

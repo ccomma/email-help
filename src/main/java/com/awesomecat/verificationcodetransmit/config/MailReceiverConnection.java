@@ -1,6 +1,7 @@
 package com.awesomecat.verificationcodetransmit.config;
 
 import com.awesomecat.verificationcodetransmit.bo.MailInfo;
+import com.awesomecat.verificationcodetransmit.constants.MailConstant;
 import com.awesomecat.verificationcodetransmit.service.MailHandlerService;
 import com.sun.mail.imap.IMAPFolder;
 import lombok.SneakyThrows;
@@ -19,6 +20,7 @@ import javax.mail.event.MessageCountEvent;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 /**
  * 邮箱接收配置
@@ -74,7 +76,7 @@ public class MailReceiverConnection {
         store.connect(mailReceiverConfigurationProperties.getHost(), mailReceiverConfigurationProperties.getPort(), mailReceiverConfigurationProperties.getUsername(), mailReceiverConfigurationProperties.getPassword());
 
         // 获取收件箱
-        Folder folder = store.getFolder("Inbox");
+        Folder folder = store.getFolder(MailConstant.INBOX_FOLDER_NAME);
         if (folder == null || !folder.exists()) {
             String errorMsg = String.format("open inbox error, folder is null or not exists, host: %s, port: %s, username: %s", mailReceiverConfigurationProperties.getHost(), mailReceiverConfigurationProperties.getPort(), mailReceiverConfigurationProperties.getUsername());
             log.error(errorMsg);
@@ -123,6 +125,10 @@ public class MailReceiverConnection {
                 log.error("reopen folder error", e);
             }
         }
+    }
+
+    public void handle(Consumer<IMAPFolder> consumer) {
+        consumer.accept(imapFolder);
     }
 
     public IMAPFolder getImapFolder() {
