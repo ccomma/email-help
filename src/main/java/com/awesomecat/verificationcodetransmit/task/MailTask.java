@@ -23,7 +23,7 @@ public class MailTask {
     private MailReceiverConnection mailReceiverConnection;
 
     /**
-     * 定时每10分钟和服务器通信一次，保持连接
+     * 心跳：每 10 分钟一次
      */
     @Scheduled(cron = "${mail.receiver.cron}")
     public void noop() throws MessagingException {
@@ -32,6 +32,8 @@ public class MailTask {
         }
 
         log.info("the ticktock is start, time:{}", LocalDateTime.now());
+
+        // TODO: 2021/12/14 移至 Service 类中
 
         // 连接
         mailReceiverConnection.connect();
