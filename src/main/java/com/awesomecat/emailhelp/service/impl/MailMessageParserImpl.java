@@ -7,11 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Part;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
@@ -73,14 +69,14 @@ public class MailMessageParserImpl implements MailMessageParser {
      * @author awesomecat
      * @date 2021/12/14 19:06
      */
-    private PersonInfo getFrom(MimeMessage mimeMessage) throws MessagingException {
+    private InternetAddress getFrom(MimeMessage mimeMessage) throws MessagingException {
         InternetAddress[] address = (InternetAddress[]) mimeMessage.getFrom();
         if (address[0].getAddress() == null) {
             log.warn("mail address is null!");
             return null;
         }
 
-        return PersonInfo.of(address[0]);
+        return address[0];
     }
 
     /**
@@ -93,14 +89,14 @@ public class MailMessageParserImpl implements MailMessageParser {
      * @author awesomecat
      * @date 2021/12/14 19:06
      */
-    private List<PersonInfo> getReceiveInfoList(Message.RecipientType type, MimeMessage mimeMessage) throws MessagingException, UnsupportedEncodingException {
+    private List<Address> getReceiveInfoList(Message.RecipientType type, MimeMessage mimeMessage) throws MessagingException, UnsupportedEncodingException {
         Assert.notNull(type, "RecipientType must not be null");
         InternetAddress[] addressList = (InternetAddress[]) mimeMessage.getRecipients(type);
         if (addressList == null) {
             return Collections.emptyList();
         }
 
-        return Arrays.stream(addressList).map(PersonInfo::of).collect(Collectors.toList());
+        return Arrays.stream(addressList).map(Address.class::cast).collect(Collectors.toList());
     }
 
     /**

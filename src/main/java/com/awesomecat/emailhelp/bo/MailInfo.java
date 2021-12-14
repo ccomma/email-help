@@ -5,11 +5,13 @@ import lombok.Data;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.mail.Address;
+import javax.mail.internet.InternetAddress;
 import java.util.Date;
 import java.util.List;
 
 /**
- * 邮件内容
+ * 邮件信息
  *
  * @author awesomecat
  */
@@ -22,16 +24,16 @@ public class MailInfo {
     private String content;
 
     /** 发件人的地址和姓名 */
-    private PersonInfo from;
+    private Address from;
 
     /** 收件人 */
-    private List<PersonInfo> to;
+    private List<Address> to;
 
     /** 抄送人 */
-    private List<PersonInfo> cc;
+    private List<Address> cc;
 
     /** 私密抄送 */
-    private List<PersonInfo> bcc;
+    private List<Address> bcc;
 
     /** 邮件主题 */
     private String subject;

@@ -15,9 +15,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class MailReceiverConfigurationProperties {
 
     /**
-     * 邮箱服务地址
+     * 收件箱地址
      */
-    private String host;
+    private String storeHost;
+
+    /**
+     * 发件箱地址
+     */
+    private String transportHost;
 
     /**
      * 端口
@@ -25,22 +30,27 @@ public class MailReceiverConfigurationProperties {
     private Integer port = 993;
 
     /**
-     * 用户名
+     * 邮箱
      */
     private String username;
 
     /**
-     * 密码
+     * 授权码
      */
     private String password;
 
     /**
-     * 协议
+     * 收件协议
      */
-    private String protocol = "imap";
+    private String storeProtocol = "imap";
 
     /**
-     * ssl
+     * 发件协议
+     */
+    private String transportProtocol = "smtp";
+
+    /**
+     * SSL
      */
     private Boolean ssl = true;
 

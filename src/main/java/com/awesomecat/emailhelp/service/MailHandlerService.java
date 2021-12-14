@@ -1,5 +1,7 @@
 package com.awesomecat.emailhelp.service;
 
+import com.awesomecat.emailhelp.bo.MailInfo;
+
 import javax.mail.MessagingException;
 
 /**
@@ -24,4 +26,14 @@ public interface MailHandlerService {
      * @date 2021/12/14 14:20
      */
     void listen() throws MessagingException;
+
+    /**
+     * 发送邮件
+     *
+     * @param mailInfo 邮件信息
+     * @author CComma
+     * @date 2021/12/14 22:23
+     */
+    void sendEmail(MailInfo mailInfo) throws MessagingException;
+
 }
