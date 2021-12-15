@@ -2,6 +2,7 @@ package com.awesomecat.emailhelp.config;
 
 import com.awesomecat.emailhelp.constants.MailConstant;
 import com.sun.mail.imap.IMAPFolder;
+import com.sun.mail.imap.IMAPStore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.Transport;
+import java.util.HashMap;
 import java.util.Properties;
 
 /**
@@ -55,6 +57,17 @@ public class MailReceiverConnection {
 
         store = storeSession.getStore(mailReceiverConfigurationProperties.getStoreProtocol());
         store.connect(mailReceiverConfigurationProperties.getStoreHost(), mailReceiverConfigurationProperties.getPort(), mailReceiverConfigurationProperties.getUsername(), mailReceiverConfigurationProperties.getPassword());
+
+        // 163 邮箱需要添加 id 进行认证
+        if (MailConstant.IMAP_SERVER_163.equals(mailReceiverConfigurationProperties.getStoreHost())) {
+            // 带上 IMAP ID 信息，由 key 和 value 组成，例如 name，version，vendor，support-email 等
+            HashMap<String, String> imapIdMap = new HashMap<>(8);
+            imapIdMap.put("name", "myname");
+            imapIdMap.put("version", "1.0.0");
+            imapIdMap.put("vendor", "myclient");
+            imapIdMap.put("support-email", "testmail@test.com");
+            ((IMAPStore) store).id(imapIdMap);
+        }
 
         return store;
     }

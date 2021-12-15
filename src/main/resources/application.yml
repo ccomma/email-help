@@ -5,7 +5,7 @@ mail:
     transport-host: smtp.163.com
     port: 993
     # email username
-    username: xxx
+    username: xxx@163.com
     # authorization code
     password: xxx
     store-protocol: imap
