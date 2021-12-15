@@ -1,14 +1,14 @@
 mail:
   receiver:
-    # 163 email
-    store-host: imap.163.com
-    transport-host: smtp.163.com
+    # qq email
+    store-host: imap.qq.com
+    transport-host: smtp.qq.com
     imap-port: 993
-    smtp-port: 994
+    smtp-port: 993
     # email username
-    username: 13023676130@163.com
+    username: xxx@qq.com
     # authorization code
-    password: IJWECAGRBDEJHDVX
+    password: xxx
     store-protocol: imap
     transport-protocol: smtp
     ssl: true
@@ -17,7 +17,7 @@ mail:
     run-node: true
     run-node-key: ARTEMIS_JOB_NODE
     run-node-value: 1
-    cron: 0 0/10 * * * ?
+    cron: 0 0/9 * * * ?
 
 logging:
   level:

@@ -28,7 +28,7 @@ public class ForwardVerificationCodeStrategy implements ReceiveMailHandleStrateg
 
     /** 默认接收人 */
     // TODO: 2021/12/15 后期移至配置中心或数据库
-    private static final String[] RECIPIENT_STRING_ARRAY = {"782453374@qq.com", "229526881@qq.com", "1060686387@qq.com"};
+    private static final String[] RECIPIENT_STRING_ARRAY = {"xxx@qq.com", "xxx@qq.com", "xxx@qq.com"};
     /** 发送主题 */
     private static final String SUBJECT = "bilibili 验证码转发";
     /** bilibili 地址 */
