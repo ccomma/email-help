@@ -3,11 +3,12 @@ mail:
     # 163 email
     store-host: imap.163.com
     transport-host: smtp.163.com
-    port: 993
+    imap-port: 993
+    smtp-port: 994
     # email username
-    username: xxx@163.com
+    username: 13023676130@163.com
     # authorization code
-    password: xxx
+    password: IJWECAGRBDEJHDVX
     store-protocol: imap
     transport-protocol: smtp
     ssl: true

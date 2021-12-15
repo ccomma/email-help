@@ -12,10 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
-import javax.mail.*;
+import javax.mail.Address;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Store;
+import javax.mail.Transport;
 import javax.mail.event.MessageCountAdapter;
 import javax.mail.event.MessageCountEvent;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 import java.util.concurrent.ExecutorService;
@@ -69,6 +73,10 @@ public class MailHandlerServiceImpl implements MailHandlerService {
         try (Store store = mailReceiverConnection.storeConnect();
              IMAPFolder imapFolder = mailReceiverConnection.openInBox()) {
 
+            if (mailReceiverConnection.isSupportIdle()) {
+                throw new MessagingException("not support idle");
+            }
+
             // 监听
             imapFolder.addMessageCountListener(new MessageCountAdapter() {
                 @SneakyThrows
@@ -85,7 +93,9 @@ public class MailHandlerServiceImpl implements MailHandlerService {
                 }
             });
 
-            this.openIdleMode(imapFolder);
+            while (true) {
+                this.openIdleMode(imapFolder);
+            }
         }
     }
 
@@ -110,26 +120,28 @@ public class MailHandlerServiceImpl implements MailHandlerService {
 
     /**
      * 打开空闲模式
+     * <p>
+     * 使用 idle 模式，服务器可能会在超时结束时隐式地注销客户端，
+     * 所以需要定时发送 NOOP 指令，以确保客户端仍然在线，{@link MailHandlerServiceImpl#tiktok()}。
+     * <p>
+     * NOOP 指令什么也不做，但这可以让 idle 终止并重新在 while 循环中运行。
+     * GMail 超时时间很低，大约为 10 分钟，所以可以 NOOP 轮询时间可设为 9 分钟。
      *
      * @param imapFolder 收件箱
      * @author awesomecat
      * @date 2021/12/14 23:52
      */
-    @SuppressWarnings("all")
     private void openIdleMode(IMAPFolder imapFolder) {
-        // 不会无限循环，抑制警告
-        while (true) {
-            try {
-                if (!imapFolder.isOpen()) {
-                    log.warn("reopen folder");
-                    imapFolder.open(Folder.READ_WRITE);
-                }
-
-                // 空闲模式，保持监听
-                imapFolder.idle();
-            } catch (MessagingException e) {
-                log.error("reopen folder error", e);
+        try {
+            if (!imapFolder.isOpen()) {
+                log.warn("reopen folder");
+                imapFolder.open(Folder.READ_WRITE);
             }
+
+            // 空闲模式，保持监听
+            imapFolder.idle();
+        } catch (MessagingException e) {
+            log.error("open idle mode error", e);
         }
     }
 

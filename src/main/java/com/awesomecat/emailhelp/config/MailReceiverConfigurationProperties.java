@@ -23,9 +23,14 @@ public class MailReceiverConfigurationProperties {
     private String transportHost;
 
     /**
-     * 端口
+     * IMAP 端口
      */
-    private Integer port = 993;
+    private Integer imapPort = 993;
+
+    /**
+     * SMTP 端口
+     */
+    private Integer smtpPort = 994;
 
     /**
      * 邮箱

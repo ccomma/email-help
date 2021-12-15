@@ -56,7 +56,7 @@ public class MailReceiverConnection {
         }
 
         store = storeSession.getStore(mailReceiverConfigurationProperties.getStoreProtocol());
-        store.connect(mailReceiverConfigurationProperties.getStoreHost(), mailReceiverConfigurationProperties.getPort(), mailReceiverConfigurationProperties.getUsername(), mailReceiverConfigurationProperties.getPassword());
+        store.connect(mailReceiverConfigurationProperties.getStoreHost(), mailReceiverConfigurationProperties.getImapPort(), mailReceiverConfigurationProperties.getUsername(), mailReceiverConfigurationProperties.getPassword());
 
         // 163 邮箱需要添加 id 进行认证
         if (MailConstant.IMAP_SERVER_163.equals(mailReceiverConfigurationProperties.getStoreHost())) {
@@ -110,7 +110,7 @@ public class MailReceiverConnection {
         // 获取收件箱
         Folder folder = store.getFolder(MailConstant.INBOX_FOLDER_NAME);
         if (folder == null || !folder.exists()) {
-            String errorMsg = String.format("open inbox error, folder is null or not exists, host: %s, port: %s, username: %s", mailReceiverConfigurationProperties.getStoreHost(), mailReceiverConfigurationProperties.getPort(), mailReceiverConfigurationProperties.getUsername());
+            String errorMsg = String.format("open inbox error, folder is null or not exists, host: %s, port: %s, username: %s", mailReceiverConfigurationProperties.getStoreHost(), mailReceiverConfigurationProperties.getImapPort(), mailReceiverConfigurationProperties.getUsername());
             log.error(errorMsg);
             throw new MessagingException(errorMsg);
         }
@@ -150,6 +150,13 @@ public class MailReceiverConnection {
         // 支持多节点判断，优先 runMode = true，runNodeKey 为兼容已有系统中已有的配置
         String runNodeKeyEnv = System.getenv(mailReceiverConfigurationProperties.getRunNodeKey());
         return !mailReceiverConfigurationProperties.getRunNodeValue().equals(runNodeKeyEnv != null ? runNodeKeyEnv : "-1");
+    }
+
+    /**
+     * 是否支持 idle 模式
+     */
+    public boolean isSupportIdle() throws MessagingException {
+        return ((IMAPStore) store).hasCapability("IDLE");
     }
 
     public Session getStoreSession() {
