@@ -1,6 +1,6 @@
 mail:
   receiver:
-    # qq email
+    # service
     store-host: imap.qq.com
     transport-host: smtp.qq.com
     imap-port: 993

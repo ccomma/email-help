@@ -73,7 +73,7 @@ public class MailHandlerServiceImpl implements MailHandlerService {
         try (Store store = mailReceiverConnection.storeConnect();
              IMAPFolder imapFolder = mailReceiverConnection.openInBox()) {
 
-            if (mailReceiverConnection.isSupportIdle()) {
+            if (!mailReceiverConnection.isSupportIdle()) {
                 throw new MessagingException("not support idle");
             }
 
