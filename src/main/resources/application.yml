@@ -6,7 +6,7 @@ mail:
     port: 993
     # email username
     username: xxx
-    # IMAP authorization code
+    # authorization code
     password: xxx
     store-protocol: imap
     transport-protocol: smtp
@@ -21,3 +21,8 @@ mail:
 logging:
   level:
     root: debug
+
+# spring-boot 2.6 开始默认禁止依赖循环
+spring:
+  main:
+    allow-circular-references: true
