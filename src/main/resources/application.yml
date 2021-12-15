@@ -1,8 +1,8 @@
 mail:
   receiver:
-    # qq email
-    store-host: imap.qq.com
-    transport-host: smtp.qq.com
+    # 163 email
+    store-host: imap.163.com
+    transport-host: smtp.163.com
     port: 993
     # email username
     username: xxx

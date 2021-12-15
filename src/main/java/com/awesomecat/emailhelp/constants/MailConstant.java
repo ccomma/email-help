@@ -11,5 +11,6 @@ public class MailConstant {
     private MailConstant() {
     }
 
+    /** 收件箱名称 */
     public static final String INBOX_FOLDER_NAME = "INBOX";
 }

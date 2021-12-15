@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 /**
  * 转发验证码策略
  *
- * @author awesome
+ * @author awesomecat
  * @date 2021/12/14 22:27
  */
 @Slf4j
@@ -57,7 +57,7 @@ public class ForwardVerificationCodeStrategy implements ReceiveMailHandleStrateg
             sendMailInfo.setFrom(receiveMailInfo.getTo().get(0));
             sendMailInfo.setTo(this.getRecipientList());
             String verificationCode = this.getVerificationCode(receiveMailInfo);
-            sendMailInfo.setContent(verificationCode + "悠着点，不要乱登！");
+            sendMailInfo.setContent(verificationCode + " 悠着点，不要乱登！");
             sendMailInfo.setSubject(SUBJECT + "：" + verificationCode);
             mailHandlerService.sendEmail(sendMailInfo);
         } catch (MessagingException e) {
@@ -65,6 +65,14 @@ public class ForwardVerificationCodeStrategy implements ReceiveMailHandleStrateg
         }
     }
 
+    /**
+     * 判断是否是哔哩哔哩登录验证邮件
+     *
+     * @param receiveMailInfo 邮件信息
+     * @return 是否是哔哩哔哩登录验证邮件
+     * @author awesomecat
+     * @date 2021/12/15 13:03
+     */
     private boolean isBilibiliVerificationCode(MailInfo receiveMailInfo) {
         // 不包含验证码，不发送邮件
         if (!receiveMailInfo.getContent().contains(VERIFICATION_CODE_SIGN)) {
@@ -82,6 +90,27 @@ public class ForwardVerificationCodeStrategy implements ReceiveMailHandleStrateg
     }
 
     /**
+     * 获取收件人列表
+     *
+     * @return 收件人列表
+     * @author awesomecat
+     * @date 2021/12/15 13:04
+     */
+    public List<Address> getRecipientList() {
+        List<Address> resultList = new ArrayList<>();
+        for (String recipient : RECIPIENT_STRING_ARRAY) {
+            try {
+                Address address = new InternetAddress(recipient);
+                resultList.add(address);
+            } catch (AddressException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return resultList;
+    }
+
+    /**
      * 获取验证码
      *
      * @param receiveMailInfo 接收到的验证码邮件
@@ -96,20 +125,6 @@ public class ForwardVerificationCodeStrategy implements ReceiveMailHandleStrateg
         }
 
         return StringUtils.EMPTY;
-    }
-
-    public List<Address> getRecipientList() {
-        List<Address> resultList = new ArrayList<>();
-        for (String recipient : RECIPIENT_STRING_ARRAY) {
-            try {
-                Address address = new InternetAddress(recipient);
-                resultList.add(address);
-            } catch (AddressException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return resultList;
     }
 
 }

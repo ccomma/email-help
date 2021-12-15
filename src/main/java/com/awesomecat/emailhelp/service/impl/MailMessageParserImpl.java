@@ -130,7 +130,7 @@ public class MailMessageParserImpl implements MailMessageParser {
      * @param stringBuilder 内容构造器
      * @param imgs          图片信息
      * @param part          邮件内容
-     * @author mianXian
+     * @author awesomecat
      * @date 2021/12/14 19:10
      */
     private void getMailContent(StringBuilder stringBuilder, Map<String, String> imgs, Part part) throws MessagingException, IOException {

@@ -6,9 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import javax.mail.*;
+import javax.mail.Folder;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Store;
+import javax.mail.Transport;
 import java.util.Properties;
-import java.util.function.Consumer;
 
 /**
  * 邮箱接收配置
@@ -20,9 +23,13 @@ import java.util.function.Consumer;
 @Component
 public class MailReceiverConnection {
 
+    /** 收件 Session */
     private Session storeSession;
+    /** 收件连接 */
     private Store store;
+    /** 发件 Session */
     private Session transportSession;
+    /** 发件连接 */
     private Transport transport;
 
     @Resource
@@ -52,6 +59,9 @@ public class MailReceiverConnection {
         return store;
     }
 
+    /**
+     * 发件连接
+     */
     public Transport transportConnect() throws MessagingException {
         if (this.isNotEnabled()) {
             throw new MessagingException();
@@ -76,6 +86,13 @@ public class MailReceiverConnection {
         return transport;
     }
 
+    /**
+     * 打开收件箱
+     *
+     * @return 收件箱
+     * @author awesomecat
+     * @date 2021/12/15 13:14
+     */
     public IMAPFolder openInBox() throws MessagingException {
         // 获取收件箱
         Folder folder = store.getFolder(MailConstant.INBOX_FOLDER_NAME);
@@ -100,7 +117,7 @@ public class MailReceiverConnection {
         Properties properties = System.getProperties();
         properties.setProperty("mail.imap.auth", "true");
         properties.setProperty("mail.store.protocol", mailReceiverConfigurationProperties.getStoreProtocol());
-        properties.setProperty("mail.transport.protocol",mailReceiverConfigurationProperties.getTransportProtocol());
+        properties.setProperty("mail.transport.protocol", mailReceiverConfigurationProperties.getTransportProtocol());
         properties.setProperty("mail.imap.ssl.enable", String.valueOf(mailReceiverConfigurationProperties.getSsl()));
         properties.setProperty("mail.smtp.ssl.enable", String.valueOf(mailReceiverConfigurationProperties.getSsl()));
 
@@ -113,7 +130,7 @@ public class MailReceiverConnection {
      * @return 是否开启
      */
     public boolean isNotEnabled() {
-        if (mailReceiverConfigurationProperties.getRunNode()) {
+        if (Boolean.TRUE.equals(mailReceiverConfigurationProperties.getRunNode())) {
             return false;
         }
 

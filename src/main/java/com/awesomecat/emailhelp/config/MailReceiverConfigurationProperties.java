@@ -1,7 +1,6 @@
 package com.awesomecat.emailhelp.config;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -9,8 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @author awesomecat
  */
-@Getter
-@Setter
+@Data
 @ConfigurationProperties(prefix = "mail.receiver")
 public class MailReceiverConfigurationProperties {
 
