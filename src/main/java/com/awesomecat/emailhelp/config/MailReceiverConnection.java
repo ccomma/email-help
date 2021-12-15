@@ -45,8 +45,6 @@ public class MailReceiverConnection {
             throw new MessagingException();
         }
 
-        log.info("mail init store connect");
-
         if (storeSession == null) {
             storeSession = this.createSession();
         }
@@ -54,6 +52,8 @@ public class MailReceiverConnection {
         if (store != null) {
             return store;
         }
+
+        log.info("mail init store connect");
 
         store = storeSession.getStore(mailReceiverConfigurationProperties.getStoreProtocol());
         store.connect(mailReceiverConfigurationProperties.getStoreHost(), mailReceiverConfigurationProperties.getImapPort(), mailReceiverConfigurationProperties.getUsername(), mailReceiverConfigurationProperties.getPassword());
@@ -80,8 +80,6 @@ public class MailReceiverConnection {
             throw new MessagingException();
         }
 
-        log.info("mail init transport connect");
-
         if (transportSession == null) {
             transportSession = this.createSession();
         }
@@ -89,6 +87,8 @@ public class MailReceiverConnection {
         if (transport != null) {
             return transport;
         }
+
+        log.info("mail init transport connect");
 
         // 获取连接对象
         transport = transportSession.getTransport(mailReceiverConfigurationProperties.getTransportProtocol());
